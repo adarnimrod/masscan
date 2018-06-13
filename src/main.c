@@ -621,6 +621,11 @@ receive_thread(void *v)
                                     "http-user-agent",
                                     masscan->http_user_agent_length,
                                     masscan->http_user_agent);
+        if (masscan->is_hello_smbv1)
+            tcpcon_set_parameter(   tcpcon,
+                                 "hello",
+                                 1,
+                                 "smbv1");
         if (masscan->is_hello_ssl)
             tcpcon_set_parameter(   tcpcon,
                                  "hello",
@@ -1385,6 +1390,12 @@ main_scan(struct Masscan *masscan)
 
         if (time(0) - now >= masscan->wait)
             is_rx_done = 1;
+
+        if (time(0) - now - 5 > masscan->wait)
+        {
+            printf("Passed the wait window but still running, forceful exit.");
+            exit(0);
+        }
 
         if (masscan->output.is_status_updates) {
             status_print(&status, min_index, range, rate,

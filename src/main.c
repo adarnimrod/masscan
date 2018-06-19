@@ -1393,7 +1393,7 @@ main_scan(struct Masscan *masscan)
 
         if (time(0) - now - 5 > masscan->wait)
         {
-            printf("Passed the wait window but still running, forceful exit.");
+            printf("Passed the wait window but still running, forceful exit.\n");
             exit(0);
         }
 
